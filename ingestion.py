@@ -5,8 +5,6 @@ import json
 from datetime import datetime
 
 
-
-
 #############Load config.json and get input and output paths
 with open('config.json','r') as f:
     config = json.load(f) 
@@ -17,10 +15,21 @@ output_folder_path = config['output_folder_path']
 
 
 #############Function for data ingestion
+#check for datasets, compile them together, and write to an output file
 def merge_multiple_dataframe():
-    #check for datasets, compile them together, and write to an output file
-
-
+    cur_path = os.getcwd()
+    client_activity = pd.DataFrame()
+    files = []
+    for f in os.listdir(input_folder_path):
+        client_activity = client_activity.append(pd.read_csv(cur_path + "/" + input_folder_path + "/" + f))
+        files.append(f)
+    ingested_files = open(cur_path + "/" + output_folder_path + "/" + "ingestedfiles.txt", "w")
+    for element in files:
+        ingested_files.write(element + "\n")
+    ingested_files.close()
+    client_activity = client_activity.drop_duplicates()
+    client_activity.reset_index(drop=True, inplace=True)
+    client_activity.to_csv(cur_path + "/" + output_folder_path + "/" + "finaldata.csv", index = False)
 
 if __name__ == '__main__':
     merge_multiple_dataframe()
