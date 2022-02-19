@@ -23,7 +23,7 @@ def train_model():
     y = np.empty
     for f in os.listdir(dataset_csv_path):
         if(f.endswith('csv')):
-            X = np.loadtxt(cur_path + "/" + dataset_csv_path + "/" + f, delimiter=',', skiprows=1, usecols=[1,3])
+            X = np.loadtxt(cur_path + "/" + dataset_csv_path + "/" + f, delimiter=',', skiprows=1, usecols=[1,2,3])
             y = np.loadtxt(cur_path + "/" + dataset_csv_path + "/" + f, delimiter=',', skiprows=1, usecols=[4])
 
     #use this logistic regression for training
