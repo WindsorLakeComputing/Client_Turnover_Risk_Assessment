@@ -34,6 +34,7 @@ def score_model():
     latest = open(cur_path + "/" + model_path + "/" + "latestscore.txt", "w")
     latest.write('F1 is: ' + str(metrics.f1_score(y, predictions)) + "\n")
     latest.close()
+    return('F1 is: ' + str(metrics.f1_score(y, predictions)))
 
 if __name__ == '__main__':
     score_model()

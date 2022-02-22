@@ -20,8 +20,9 @@ test_data_path = os.path.join(config['test_data_path'])
 prod_deployment_path = os.path.join(config['prod_deployment_path'])
 
 ##################Function to get model predictions
-def model_predictions():
+def model_predictions(location=os.getcwd() + "/" + test_data_path):
     #read the deployed model and a test dataset, calculate predictions
+    print("Inside model_prediction ... the location is " + location)
     cur_path = os.getcwd()
     model = LogisticRegression()
     # load saved model
@@ -29,20 +30,20 @@ def model_predictions():
         model = pickle.load(f)
     X = np.empty
     y = np.empty
-    for f in os.listdir(test_data_path):
+    for f in os.listdir(location):
         if(f.endswith('csv')):
-            X = np.loadtxt(cur_path + "/" + test_data_path + "/" + f, delimiter=',', skiprows=1, usecols=[1,2,3])
-            y = np.loadtxt(cur_path + "/" + test_data_path + "/" + f, delimiter=',', skiprows=1, usecols=[4])
+            X = np.loadtxt(location + "/" + f, delimiter=',', skiprows=1, usecols=[1,2,3])
+            y = np.loadtxt(location + "/" + f, delimiter=',', skiprows=1, usecols=[4])
 
     predictions = model.predict(X)
-    return predictions
+    return predictions, y
 ##################Function to get summary statistics
 def dataframe_summary():
     #calculate summary statistics here
     files = []
     client_activity = pd.DataFrame()
     cur_path = os.getcwd()
-    stats = []
+    stats = {}
     for f in os.listdir(dataset_csv_path):
         if (f.endswith('csv')):
             client_activity = client_activity.append(pd.read_csv(cur_path + "/" + dataset_csv_path + "/" + f))
@@ -56,7 +57,7 @@ def dataframe_summary():
         stat[h + "-mean"] = client_activity[h].mean()
         stat[h + "-median"] = client_activity[h].median()
         stat[h + "-std"] = client_activity[h].std()
-        stats.append(stat)
+        stats[h] = stat
     return stats
 
 def missing_data():
@@ -71,18 +72,17 @@ def missing_data():
             headers = list(client_activity.columns.values.tolist())
             for h in headers:
                 missing_data.append((h,(client_activity.isnull()[h].sum() / (client_activity.isnull()[h].sum() + client_activity.count()[h])) * 100))
-
-            return missing_data
+    return missing_data
 
 ##################Function to get timings
 def execution_time():
     # calculate timing of training.py and ingestion.py
     times = []
     times.append(("ingestion.py", timeit.timeit(stmt=merge_multiple_dataframe,
-                        number=10000)))
+                        number=1)))
 
     times.append(("training.py", timeit.timeit(stmt=train_model,
-                        number=10000)))
+                        number=1)))
     print(times)
 
 
@@ -105,8 +105,8 @@ if __name__ == '__main__':
     model_predictions()
     #dataframe_summary()
     #missing_data()
-    #execution_time()
-    outdated_packages_list()
+    execution_time()
+    #outdated_packages_list()
 
 
 

@@ -23,6 +23,8 @@ def train_model():
     y = np.empty
     for f in os.listdir(dataset_csv_path):
         if(f.endswith('csv')):
+            if(f == "nulldata.csv"):
+                continue
             X = np.loadtxt(cur_path + "/" + dataset_csv_path + "/" + f, delimiter=',', skiprows=1, usecols=[1,2,3])
             y = np.loadtxt(cur_path + "/" + dataset_csv_path + "/" + f, delimiter=',', skiprows=1, usecols=[4])
 
