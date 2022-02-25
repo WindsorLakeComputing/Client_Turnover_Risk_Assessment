@@ -90,9 +90,9 @@ def execution_time():
 ##################Function to check dependencies
 def outdated_packages_list():
     req_file = open(os.getcwd() + "/" + 'requirements.txt', 'r')
-    Lines = req_file.readlines()
+    lines = req_file.readlines()
     packages = []
-    for line in Lines:
+    for line in lines:
         installed = subprocess.check_output("pip index versions {package} | sed -nr 's/INSTALLED: ([0-9]+)/\\1/p'".format(
             package=re.split('==', line)[0]), shell=True)
         latest = subprocess.check_output("pip index versions {package} | sed -nr 's/LATEST:    ([0-9]+)/\\1/p'".format(
