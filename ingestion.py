@@ -16,7 +16,7 @@ output_folder_path = config['output_folder_path']
 
 #############Function for data ingestion
 #check for datasets, compile them together, and write to an output file
-def merge_multiple_dataframe(input_files=[], output_folder_path=output_folder_path):
+def merge_multiple_dataframe(input_files=[]):
     cur_path = os.getcwd()
     client_activity = pd.DataFrame()
     files = []
